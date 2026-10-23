@@ -1,0 +1,28 @@
+scopes:
+  source:
+    files:
+      security:
+        include:
+          - security/**
+      docs:
+        include:
+          - docs/**
+  merge_queue_scope: merge-queue
+
+queue_rules:
+  - name: default
+    queue_conditions:
+      - base = main
+    merge_conditions:
+      - check-success = ci-gate
+    merge_method: squash
+    batch_size: 1
+
+pull_request_rules:
+  - name: queue after gate
+    conditions:
+      - base = main
+      - check-success = ci-gate
+    actions:
+      queue:
+        name: default
